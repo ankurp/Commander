@@ -1,0 +1,28 @@
+<%= turbo_stream_from [current_user, :commands] %>
+<div class="row">
+  <div class="col-sm-6">
+    <h1>Commands</h1>
+  </div>
+  <div class="col-sm-6 text-right">
+    <turbo-frame id="new_command">
+      <%= link_to new_command_path, class: 'btn btn-primary' do %>
+        Add New Command
+      <% end %>
+    </turbo-frame>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Command</th>
+        <th scope="col">Queued</th>
+        <th scope="col">Status</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody id="commands">
+      <%= render partial: "command_table", collection: @commands, as: :command %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,15 @@
+<div id="<%= dom_id(command) %>">
+  <pre class="font-weight-bold">$ <%= command.text %></pre>
+
+  <div id="outputs" class="pb-5">
+    <%= render command.outputs %>
+  </div>
+
+  <% if command.running? || command.not_started? %>
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  <% end %>
+</div>

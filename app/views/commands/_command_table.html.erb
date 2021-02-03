@@ -1,0 +1,14 @@
+<%= content_tag :tr, id: dom_id(command), class: dom_class(command) do %>
+  <th scope="row"><%= link_to command.text, command %></th>
+  <td><%= time_ago_in_words(command.created_at) %> ago</td>
+  <td><%= command.status %></td>
+  <td>
+    <% if command.running? %>
+      <%= button_to 'Kill', kill_command_path(command),
+        onclick: 'return confirm("Are you sure?")',
+        method: :delete,
+        class: "btn btn-danger"
+      %>
+    <% end %>
+  </td>
+<% end %>
