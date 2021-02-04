@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "thread"
-
 class Cmd
   attr_reader :cmd, :pid
 
@@ -30,27 +28,27 @@ class Cmd
     @pid = pid
 
     out_handler = ->(data) {
-      @block.(data, nil) if @block
+      @block.call(data, nil) if @block
     }
-  
+
     err_handler = ->(data) {
-      @block.(nil, data) if @block
+      @block.call(nil, data) if @block
     }
-  
+
     stdout_thread = read_stream(stdout, out_handler)
     stderr_thread = read_stream(stderr, err_handler)
-  
+
     stdout_thread.join
     stderr_thread.join
 
     wait.join
-    yield(@exit_status)
+    yield(@status)
   end
 
   def wait
     Thread.new do
       _pid, status = Process.wait2(pid)
-      @exit_status = status.exitstatus || status.termsig rescue -1  
+      @status = status
     end
   end
 
@@ -60,7 +58,9 @@ class Cmd
   #
   # @api public
   def terminate
-    Process.kill("SIGKILL", @pid) rescue nil
+    Process.kill("SIGKILL", @pid)
+  rescue
+    nil
   end
 
   private
@@ -89,14 +89,12 @@ class Cmd
         raise TimeoutExceeded if ready.nil?
 
         ready[0].each do |reader|
-          begin
-            chunk = reader.readpartial(BUFSIZE)
-            handler.(chunk)
-          rescue Errno::EAGAIN, Errno::EINTR
-          rescue EOFError, Errno::EPIPE, Errno::EIO # thrown by PTY
-            readers.delete(reader)
-            reader.close
-          end
+          chunk = reader.readpartial(BUFSIZE)
+          handler.call(chunk)
+        rescue Errno::EAGAIN, Errno::EINTR
+        rescue EOFError, Errno::EPIPE, Errno::EIO # thrown by PTY
+          readers.delete(reader)
+          reader.close
         end
       end
     end

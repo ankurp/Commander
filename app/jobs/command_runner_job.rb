@@ -1,4 +1,4 @@
-require 'async'
+require "async"
 
 class CommandRunnerJob < ApplicationJob
   def perform(command)
@@ -22,12 +22,13 @@ class CommandRunnerJob < ApplicationJob
           break if CommandRunnerJob.cancelled?(command.job_id)
         end
         @cmd.terminate
-        command.update(status: :killed)
       end
-      
+
       @cmd.run do |status|
-        unless command.reload.killed?
-          command.update(status: status.zero? ? :success : :failure)
+        if status.termsig.present?
+          command.update(status: :killed)
+        else
+          command.update(status: status.exitstatus.zero? ? :success : :failure)
         end
       end
     end

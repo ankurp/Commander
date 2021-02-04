@@ -3,7 +3,7 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   resources :commands, only: [:index, :show, :new, :create, :kill] do
     member do
-      delete 'kill'
+      delete "kill"
     end
   end
   get "/privacy", to: "home#privacy"

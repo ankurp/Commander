@@ -1,7 +1,7 @@
 <%= form_with(model: command, data: { "turbo-frame": "_top" }, local: true) do |form| %>
   <% if command.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(command.errors.count, "error") %> prohibited this command from being saved:</h2>
+      <div><%= pluralize(command.errors.count, "error") %> prohibited this command from being saved:</div>
 
       <ul>
       <% command.errors.full_messages.each do |message| %>
@@ -14,7 +14,7 @@
   <div class="form-group">
     
     <div class="input-group">
-      <%= form.text_field :text, class: 'form-control' %>
+      <%= form.text_field :text, required: true, class: 'form-control' %>
       <div class="input-group-append">
         <%= form.submit class: 'btn btn-primary' %>
       </div>

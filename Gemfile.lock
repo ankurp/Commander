@@ -411,6 +411,7 @@ DEPENDENCIES
   hotwire-rails (~> 0.1.3)
   image_processing
   jbuilder (~> 2.7)
+  kaminari (~> 1.2)
   listen (~> 3.3)
   mini_magick (~> 4.10, >= 4.10.1)
   name_of_person (~> 1.1)

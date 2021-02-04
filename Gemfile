@@ -77,5 +77,6 @@ gem "tty-command", "~> 0.10.0"
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "whenever", require: false
 
-
 gem "async", "~> 1.28"
+
+gem "kaminari", "~> 1.2"

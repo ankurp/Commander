@@ -5,7 +5,7 @@ class CommandsController < ApplicationController
 
   # GET /commands or /commands.json
   def index
-    @commands = Command.all.order(:created_at)
+    @commands = Command.order(created_at: :desc).page(params[:page])
   end
 
   # GET /commands/1 or /commands/1.json
@@ -23,7 +23,7 @@ class CommandsController < ApplicationController
 
     respond_to do |format|
       if @command.save
-        format.html { redirect_to @command, notice: "Command was successfully created." }
+        format.html { redirect_to @command, notice: "Command is queued to run..." }
         format.json { render :show, status: :created, location: @command }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -35,7 +35,7 @@ class CommandsController < ApplicationController
   def kill
     @command.kill!
     respond_to do |format|
-      format.html { redirect_to @command, notice: "Kill command sent." }
+      format.html { redirect_to commands_path, notice: "Kill command sent." }
       format.json { render :show, status: :created, location: @command }
     end
   end
